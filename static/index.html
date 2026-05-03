@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>DUON — Mission Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css?v=20260429" />
+</head>
+<body>
+
+<!-- ════════════ STATUS BAR ════════════ -->
+<header class="statusbar" id="statusbar">
+  <div class="sb-brand">
+    <span class="sb-logo">&#11042; DUON</span>
+  </div>
+
+  <div class="sb-island">
+    <!-- ESP Indicators -->
+    <div class="sb-esp-group">
+      <div class="sb-esp-pill" id="sb-esp1-pill">
+        <span class="sb-ledot" id="sb-dot1"></span>
+        <span class="sb-esp-lbl">ESP1</span>
+      </div>
+      <div class="sb-esp-pill" id="sb-esp2-pill">
+        <span class="sb-ledot" id="sb-dot2"></span>
+        <span class="sb-esp-lbl">ESP2</span>
+      </div>
+    </div>
+
+    <div class="sb-divider"></div>
+
+    <!-- E-Stop controls -->
+    <button class="sb-btn sb-estop" id="sb-estop" onclick="manualEStop()">
+      &#9632; STOP
+    </button>
+    <button class="sb-btn sb-auto" id="sb-auto" onclick="sbToggleAutoEStop()">
+      &#9889; AUTO
+    </button>
+
+    <div class="sb-divider"></div>
+
+    <!-- Live telemetry -->
+    <div class="sb-telem" id="sb-sonar-f" title="Front sonar distance">F: ---</div>
+    <div class="sb-map-status" id="sb-map-status">MAP: OFF</div>
+
+    <div class="sb-divider"></div>
+
+    <!-- WS status + latency -->
+    <div class="sb-ws" id="sb-ws">&#9679; CONNECTING</div>
+    <div class="sb-ping" id="sb-ping" title="Browser to server latency"></div>
+  </div>
+
+  <div class="sb-right">
+    <button class="sb-theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+      <span id="theme-icon">&#9790;</span>
+    </button>
+  </div>
+</header>
+
+<!-- ════════════ SIDEBAR ════════════ -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-nav">
+    <a class="nav-item" data-page="home"     onclick="navigate('home',this)"><span class="nav-ic">&#127968;</span><span class="nav-txt">Overview</span></a>
+    <a class="nav-item" data-page="network"  onclick="navigate('network',this)"><span class="nav-ic">&#128268;</span><span class="nav-txt">Network</span></a>
+    <a class="nav-item" data-page="drive"    onclick="navigate('drive',this)"><span class="nav-ic">&#128377;</span><span class="nav-txt">Drive</span></a>
+    <a class="nav-item" data-page="mapper"   onclick="navigate('mapper',this)"><span class="nav-ic">&#128506;</span><span class="nav-txt">Mapper</span></a>
+    <a class="nav-item" data-page="mapping"  onclick="navigate('mapping',this)"><span class="nav-ic">&#128209;</span><span class="nav-txt">Mapping</span></a>
+    <a class="nav-item" data-page="settings" onclick="navigate('settings',this)"><span class="nav-ic">&#9881;</span><span class="nav-txt">Settings</span></a>
+  </div>
+</nav>
+
+<!-- ════════════ MAIN CONTENT ════════════ -->
+<main class="main-content">
+
+  <!-- ══ PAGE: OVERVIEW ══ -->
+  <section class="page" id="page-home">
+    <div class="page-hero">
+      <div class="hero-content">
+        <div class="hero-badge">Minor Project — Mechanical Automation &amp; Robotics</div>
+        <h1 class="hero-title">DUON</h1>
+        <p class="hero-sub">Dynamic Ultrasonic Operations Navigation</p>
+        <p class="hero-desc">An autonomous 4-wheel-drive industrial transportation robot capable of manual remote control and fully autonomous room mapping using ultrasonic sensors.</p>
+      </div>
+      <div class="hero-art">
+        <div class="robot-art">
+          <div class="robot-body">
+            <div class="robot-head">
+              <div class="robot-eye left"></div>
+              <div class="robot-eye right"></div>
+              <div class="robot-mouth"></div>
+            </div>
+            <div class="robot-torso">
+              <div class="robot-led" id="art-led1"></div>
+              <div class="robot-led" id="art-led2"></div>
+            </div>
+          </div>
+          <div class="robot-wheels">
+            <div class="robot-wheel"></div>
+            <div class="robot-wheel"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-grid">
+      <!-- Team Card -->
+      <div class="card home-card team-card">
+        <div class="home-card-icon">&#128101;</div>
+        <h3>Project Team</h3>
+        <div class="team-member">
+          <div class="team-avatar">SP</div>
+          <div>
+            <div class="team-name">Shon Parale</div>
+            <div class="team-id">RA2311072010002</div>
+            <div style="margin-top: 4px; font-size: 0.9em; display: flex; gap: 12px;">
+              <a href="https://www.linkedin.com/in/shonparale/" target="_blank" style="color: var(--primary, #0ea5e9); text-decoration: none; display: flex; align-items: center; gap: 4px;">&#128279; LinkedIn</a>
+              <a href="https://github.com/ShonParale" target="_blank" style="color: var(--primary, #0ea5e9); text-decoration: none; display: flex; align-items: center; gap: 4px;">&#128187; GitHub</a>
+              <a href="https://sites.google.com/view/shonparale/home" target="_blank" style="color: var(--primary, #0ea5e9); text-decoration: none; display: flex; align-items: center; gap: 4px;">&#128188; Portfolio</a>
+            </div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-avatar">VP</div>
+          <div>
+            <div class="team-name">Vedant Patel</div>
+            <div class="team-id">RA2311072010009</div>
+            <div style="margin-top: 4px; font-size: 0.9em; display: flex; gap: 12px;">
+              <a href="https://www.linkedin.com/in/-vedantpatel/" target="_blank" style="color: var(--primary, #0ea5e9); text-decoration: none; display: flex; align-items: center; gap: 4px;">&#128279; LinkedIn</a>
+              <a href="https://github.com/vedu007lol" target="_blank" style="color: var(--primary, #0ea5e9); text-decoration: none; display: flex; align-items: center; gap: 4px;">&#128187; GitHub</a>
+              <a href="https://drive.google.com/file/d/1U9l_l_AUNgH8ZVXr-0SING72Od8F5QmS/view?usp=sharing" target="_blank" style="color: var(--primary, #0ea5e9); text-decoration: none; display: flex; align-items: center; gap: 4px;">&#128188; Portfolio</a>
+            </div>
+          </div>
+        </div>
+        <div class="team-course">Mechanical Automation &amp; Robotics</div>
+      </div>
+
+      <!-- Purpose Card -->
+      <div class="card home-card">
+        <div class="home-card-icon">&#127919;</div>
+        <h3>Purpose</h3>
+        <p>DUON is designed for autonomous indoor navigation and obstacle mapping in industrial or warehouse environments. It demonstrates real-time sensor fusion, dual-controller architecture, and wireless remote operation over a local network.</p>
+        <ul class="feature-list">
+          <li>&#9711; Autonomous room mapping</li>
+          <li>&#9711; Wireless remote control</li>
+          <li>&#9711; Real-time obstacle detection</li>
+          <li>&#9711; Edge-hosted web dashboard</li>
+        </ul>
+      </div>
+
+      <!-- Demonstration Card -->
+      <div class="card home-card">
+        <div class="home-card-icon">&#127910;</div>
+        <h3>Demonstration</h3>
+        <p>DUON was demonstrated navigating a real-world corridor, successfully avoiding obstacles detected by three ultrasonic sensors while its live 2D map updated in real-time on the dashboard, accessible from a phone on the same Wi-Fi network.</p>
+        <p class="mt8">The bot was controlled remotely with zero physical access to the hardware — the Raspberry Pi served the dashboard automatically on boot, and the ESPs connected on power-up.</p>
+      </div>
+    </div>
+
+    <!-- Hardware Section -->
+    <div class="card mt20">
+      <h3 class="section-title">&#128295; Hardware Platform</h3>
+      <div class="hw-grid">
+        <div class="hw-item">
+          <div class="hw-icon">&#128268;</div>
+          <div class="hw-name">2x ESP32</div>
+          <div class="hw-desc">Dual-core Wi-Fi SoC, one per motor side</div>
+        </div>
+        <div class="hw-item">
+          <div class="hw-icon">&#128267;</div>
+          <div class="hw-name">2x BTS7960</div>
+          <div class="hw-desc">43A high-current H-bridge motor drivers</div>
+        </div>
+        <div class="hw-item">
+          <div class="hw-icon">&#9881;</div>
+          <div class="hw-name">4x Encoder Motors</div>
+          <div class="hw-desc">DC motors with positional feedback encoders</div>
+        </div>
+        <div class="hw-item">
+          <div class="hw-icon">&#128268;</div>
+          <div class="hw-name">3x HC-SR04</div>
+          <div class="hw-desc">Ultrasonic sonars — Left 45°, Front 0°, Right 45°</div>
+        </div>
+        <div class="hw-item">
+          <div class="hw-icon">&#128187;</div>
+          <div class="hw-name">Raspberry Pi</div>
+          <div class="hw-desc">Headless server &amp; bridge, powered by power bank</div>
+        </div>
+        <div class="hw-item">
+          <div class="hw-icon">&#128267;</div>
+          <div class="hw-name">Power Banks</div>
+          <div class="hw-desc">Compact LiPo power banks for untethered operation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- How it works -->
+    <div class="card mt20">
+      <h3 class="section-title">&#127760; How It Works</h3>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h4>Dual ESP32 Architecture</h4>
+          <p>ESP32 #1 controls the left-side motors and all three HC-SR04 ultrasonic sensors. ESP32 #2 controls the right-side motors. Both listen for TCP commands on port 8080.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h4>Python Bridge Server</h4>
+          <p>The Raspberry Pi (or your laptop) runs this dashboard server. It maintains persistent TCP sockets to both ESPs, forwarding drive commands and streaming sensor data back.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h4>WebSocket Dashboard</h4>
+          <p>This web dashboard connects via WebSocket to the Python server. Commands you send (WASD, joystick, etc.) are relayed to both ESPs simultaneously in real-time.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <h4>Autonomous Mapping</h4>
+          <p>The sonar mapper uses a wall-following algorithm with configurable pulse/smooth modes, building a live 2D top-down map plotted on the canvas as the robot explores.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PAGE: NETWORK ══ -->
+  <section class="page" id="page-network">
+    <div class="page-header">
+      <h1>Network</h1>
+      <p class="page-sub">Configure and connect to your ESP32 controllers</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <span class="esp-badge badge-cyan">ESP32 #1</span>
+          <span class="card-sub">Left motors + All Sonars</span>
+        </div>
+        <div class="field-row">
+          <label class="field-label">IP Address</label>
+          <div class="field-wrap">
+            <input class="field-input" id="ip1" type="text" placeholder="192.168.1.xxx" />
+            <span class="field-suffix">:8080</span>
+          </div>
+        </div>
+        <div class="conn-footer">
+          <div class="conn-ind">
+            <span class="ci-dot" id="ci-dot1"></span>
+            <span class="ci-text" id="ci-text1">Offline</span>
+          </div>
+          <button class="btn btn-success" id="cbtn1" onclick="toggleConnect(1)">Connect</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="esp-badge badge-purple">ESP32 #2</span>
+          <span class="card-sub">Right motors</span>
+        </div>
+        <div class="field-row">
+          <label class="field-label">IP Address</label>
+          <div class="field-wrap">
+            <input class="field-input" id="ip2" type="text" placeholder="192.168.1.xxx" />
+            <span class="field-suffix">:8080</span>
+          </div>
+        </div>
+        <div class="conn-footer">
+          <div class="conn-ind">
+            <span class="ci-dot" id="ci-dot2"></span>
+            <span class="ci-text" id="ci-text2">Offline</span>
+          </div>
+          <button class="btn btn-success" id="cbtn2" onclick="toggleConnect(2)">Connect</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt16">
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="saveIPs()">&#128190; Save IPs</button>
+        <button class="btn btn-outline" onclick="connectBoth()">Connect Both</button>
+        <button class="btn btn-danger-soft" onclick="disconnectBoth()">Disconnect All</button>
+      </div>
+    </div>
+
+    <!-- QR Code Card -->
+    <div class="card mt16">
+      <div class="card-header">
+        <span class="card-title">Quick Connect — QR Code</span>
+        <span class="card-sub">Dynamically reflects current URL (works with Cloudflare)</span>
+      </div>
+      <div class="qr-layout">
+        <div class="qr-box-wrap">
+          <div id="qr-container" class="qr-container"></div>
+        </div>
+        <div class="qr-info">
+          <div class="qr-url-display" id="qr-url-text"></div>
+          <p class="qr-hint">Scan this QR code with your phone camera to instantly open the dashboard. This QR dynamically shows your current URL — it automatically updates whether you're on local Wi-Fi or using a Cloudflare tunnel.</p>
+          <button class="btn btn-outline btn-sm mt8" onclick="generateQR()">&#8635; Regenerate</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connection Quality -->
+    <div class="card mt16">
+      <div class="card-header">
+        <span class="card-title">Connection Quality</span>
+      </div>
+      <div class="ping-grid">
+        <div class="ping-item">
+          <div class="ping-label">This Device &#8596; Server</div>
+          <div class="ping-val" id="ping-ws-val">-- ms</div>
+          <div class="ping-bar-wrap"><div class="ping-bar" id="ping-ws-bar"></div></div>
+        </div>
+        <div class="ping-item">
+          <div class="ping-label">ESP32 #1 last data</div>
+          <div class="ping-val" id="ping-esp1-val">-- ms</div>
+          <div class="ping-bar-wrap"><div class="ping-bar" id="ping-esp1-bar"></div></div>
+        </div>
+        <div class="ping-item">
+          <div class="ping-label">ESP32 #2 last data</div>
+          <div class="ping-val" id="ping-esp2-val">-- ms</div>
+          <div class="ping-bar-wrap"><div class="ping-bar" id="ping-esp2-bar"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log -->
+    <div class="card mt16">
+      <div class="card-header">
+        <span class="card-title">Connection Log</span>
+        <button class="btn btn-ghost btn-sm" onclick="clearLog('conn-log')">Clear</button>
+      </div>
+      <div class="terminal" id="conn-log"></div>
+    </div>
+  </section>
+
+  <!-- ══ PAGE: DRIVE ══ -->
+  <section class="page" id="page-drive" tabindex="-1">
+    <div class="page-header">
+      <h1>Drive</h1>
+      <p class="page-sub">Remote control — touch, click, keyboard, or joystick</p>
+    </div>
+
+    <div class="drive-layout">
+      <!-- Left: Sonar + Controls -->
+      <div class="drive-left">
+
+        <!-- Sonar Gauges -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Sonar Sensors</span>
+            <div class="estop-row">
+              <span class="toggle-label">Auto E-Stop</span>
+              <label class="switch">
+                <input type="checkbox" id="estop-toggle" onchange="syncEStopToggle()">
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="sonar-row">
+            <div class="gauge-wrap">
+              <svg class="arc-svg" viewBox="0 0 200 110">
+                <path class="arc-bg" d="M20,100 A80,80 0 0 1 180,100"/>
+                <path class="arc-fill" id="arc-L" d="M20,100 A80,80 0 0 1 180,100" stroke-dasharray="251" stroke-dashoffset="251"/>
+                <text class="arc-val" id="arcval-L" x="100" y="80" text-anchor="middle">---</text>
+                <text class="arc-unit" x="100" y="96" text-anchor="middle">cm</text>
+              </svg>
+              <div class="gauge-lbl">Left 45°</div>
+            </div>
+            <div class="gauge-wrap">
+              <svg class="arc-svg" viewBox="0 0 200 110">
+                <path class="arc-bg" d="M20,100 A80,80 0 0 1 180,100"/>
+                <path class="arc-fill" id="arc-F" d="M20,100 A80,80 0 0 1 180,100" stroke-dasharray="251" stroke-dashoffset="251"/>
+                <text class="arc-val" id="arcval-F" x="100" y="80" text-anchor="middle">---</text>
+                <text class="arc-unit" x="100" y="96" text-anchor="middle">cm</text>
+              </svg>
+              <div class="gauge-lbl">Front 0°</div>
+            </div>
+            <div class="gauge-wrap">
+              <svg class="arc-svg" viewBox="0 0 200 110">
+                <path class="arc-bg" d="M20,100 A80,80 0 0 1 180,100"/>
+                <path class="arc-fill" id="arc-R" d="M20,100 A80,80 0 0 1 180,100" stroke-dasharray="251" stroke-dashoffset="251"/>
+                <text class="arc-val" id="arcval-R" x="100" y="80" text-anchor="middle">---</text>
+                <text class="arc-unit" x="100" y="96" text-anchor="middle">cm</text>
+              </svg>
+              <div class="gauge-lbl">Right 45°</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Control Method 1: D-Pad -->
+        <div class="card mt16">
+          <div class="card-header">
+            <span class="card-title">&#9654; D-Pad Controls</span>
+            <span class="ctrl-hint">WASD &middot; Arrows &middot; Num 8/4/6/2 &middot; Space / 5 = Stop</span>
+          </div>
+          <div class="dpad-center">
+            <div class="dpad-grid">
+              <button class="dpad-btn fwd" data-cmd="W" id="dbtn-W">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+              </button>
+              <button class="dpad-btn left" data-cmd="A" id="dbtn-A">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button class="dpad-btn xstop" data-cmd="X" id="dbtn-X">
+                <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+              </button>
+              <button class="dpad-btn right" data-cmd="D" id="dbtn-D">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <button class="dpad-btn back" data-cmd="S" id="dbtn-S">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Control Method 2: Omni Joystick -->
+        <div class="card mt16">
+          <div class="card-header">
+            <span class="card-title">&#11096; Omni Joystick</span>
+            <span class="ctrl-hint">Drag in any direction · Release = Stop</span>
+          </div>
+          <div class="joy-omni-wrap">
+            <div class="joy-omni-zone" id="omni-zone">
+              <div class="omni-ring-outer"></div>
+              <div class="omni-ring-dead"></div>
+              <div class="omni-crossh-h"></div>
+              <div class="omni-crossh-v"></div>
+              <div class="omni-knob" id="omni-knob"></div>
+            </div>
+            <div class="joy-cmd-label" id="omni-cmd-lbl">&#9679; Center</div>
+          </div>
+        </div>
+
+        <!-- Control Method 4: Dual Joystick -->
+        <div class="card mt16">
+          <div class="card-header">
+            <span class="card-title">&#9705; Dual Axis Joystick</span>
+            <span class="ctrl-hint">Left = Fwd/Back &nbsp;&#183;&nbsp; Right = Turn &nbsp;&#183;&nbsp; Release = Stop</span>
+          </div>
+          <div class="dual-joy-wrap">
+            <div class="axis-block">
+              <div class="joy-v-track" id="vj-zone">
+                <div class="joy-v-knob" id="vj-knob"></div>
+              </div>
+              <div class="axis-label">FWD / BACK</div>
+            </div>
+            <div class="dual-joy-sep"></div>
+            <div class="axis-block">
+              <div class="joy-h-track" id="hj-zone">
+                <div class="joy-h-knob" id="hj-knob"></div>
+              </div>
+              <div class="axis-label">LEFT / RIGHT</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /drive-left -->
+
+      <!-- Right: Log -->
+      <div class="drive-right">
+        <div class="card drive-log-card">
+          <div class="card-header">
+            <span class="card-title">Live Log</span>
+            <button class="btn btn-ghost btn-sm" onclick="clearLog('cmd-log')">Clear</button>
+          </div>
+          <div class="terminal drive-terminal" id="cmd-log"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PAGE: MAPPER ══ -->
+  <section class="page" id="page-mapper">
+    <div class="page-header">
+      <h1>Mapper</h1>
+      <p class="page-sub">Autonomous sonar mapping with live 2D canvas</p>
+    </div>
+
+    <div class="mapper-layout">
+      <div class="card mapper-ctrl-col">
+        <div class="mapper-actions">
+          <button class="btn btn-primary" id="map-start-btn" onclick="toggleMap()">&#9654; Start Mapping</button>
+          <button class="btn btn-outline btn-sm" onclick="clearMap()">&#128465; Clear</button>
+        </div>
+
+        <div class="field-row mt16">
+          <label class="field-label">Mode</label>
+          <select class="field-select" id="map-mode" onchange="sendMapConfig()">
+            <option value="pulse">Pulse (Stop &#8594; Scan)</option>
+            <option value="smooth">Smooth (Continuous)</option>
+          </select>
+        </div>
+
+        <div class="slider-list mt8">
+          <div class="slider-item">
+            <div class="slider-hdr"><span>Pulse</span><b id="lbl-pulse">400</b><span>ms</span></div>
+            <input type="range" min="150" max="900" value="400" id="sl-pulse"
+              oninput="lbl_pulse.textContent=this.value" onchange="sendMapConfig()">
+          </div>
+          <div class="slider-item">
+            <div class="slider-hdr"><span>Turn</span><b id="lbl-turn">480</b><span>ms</span></div>
+            <input type="range" min="250" max="900" value="480" id="sl-turn"
+              oninput="lbl_turn.textContent=this.value" onchange="sendMapConfig()">
+          </div>
+          <div class="slider-item">
+            <div class="slider-hdr"><span>Front Thr</span><b id="lbl-ft">35</b><span>cm</span></div>
+            <input type="range" min="10" max="80" value="35" id="sl-ft"
+              oninput="lbl_ft.textContent=this.value" onchange="sendMapConfig()">
+          </div>
+          <div class="slider-item">
+            <div class="slider-hdr"><span>Diag Thr</span><b id="lbl-dt">25</b><span>cm</span></div>
+            <input type="range" min="10" max="60" value="25" id="sl-dt"
+              oninput="lbl_dt.textContent=this.value" onchange="sendMapConfig()">
+          </div>
+        </div>
+
+        <div class="pose-strip mt16">
+          <div class="pose-box"><span class="pose-lbl">X</span><span class="pose-val" id="pose-x">0</span><span class="pose-unit">cm</span></div>
+          <div class="pose-box"><span class="pose-lbl">Y</span><span class="pose-val" id="pose-y">0</span><span class="pose-unit">cm</span></div>
+          <div class="pose-box"><span class="pose-lbl">HDG</span><span class="pose-val" id="pose-h">0&deg;</span></div>
+        </div>
+
+        <div class="map-legend mt16">
+          <span class="leg-item"><span class="leg-dot" style="background:#ef4444"></span>Wall</span>
+          <span class="leg-item"><span class="leg-dot" style="background:#00d4ff"></span>Path</span>
+          <span class="leg-item"><span class="leg-dot" style="background:#22c55e"></span>Free</span>
+          <span class="leg-item"><span class="leg-dot" style="background:#f1c40f"></span>Bot</span>
+        </div>
+
+        <div class="mt16">
+          <div class="card-header mb8">
+            <span class="card-title">Auto Log</span>
+            <button class="btn btn-ghost btn-sm" onclick="clearLog('auto-log')">Clear</button>
+          </div>
+          <div class="terminal small" id="auto-log"></div>
+        </div>
+      </div>
+
+      <div class="card canvas-card">
+        <div class="canvas-hint">Scroll = Zoom &nbsp;|&nbsp; Drag = Pan &nbsp;|&nbsp; Double-click = Reset</div>
+        <div class="canvas-wrap" id="canvas-wrap">
+          <canvas id="mapCanvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PAGE: SETTINGS ══ -->
+  <section class="page" id="page-settings">
+    <div class="page-header">
+      <h1>Settings</h1>
+      <p class="page-sub">Appearance, server control, and help</p>
+    </div>
+
+    <div class="settings-layout">
+      <!-- Appearance -->
+      <div class="card settings-card">
+        <h3 class="settings-title">&#127759; Appearance</h3>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Dark Mode</div>
+            <div class="setting-desc">Switch between light and dark interface</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="settings-theme-toggle" onchange="settingsToggleTheme(this)">
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Server -->
+      <div class="card settings-card">
+        <h3 class="settings-title">&#128187; Server Control</h3>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">Shutdown Server</div>
+            <div class="setting-desc">Stops the Python server process and closes this tab</div>
+          </div>
+          <button class="btn btn-danger" onclick="shutdownServer()">&#9209; Shutdown</button>
+        </div>
+      </div>
+
+      <!-- Help -->
+      <div class="card settings-card">
+        <h3 class="settings-title">&#10067; Help &amp; Instructions</h3>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">User Guide</div>
+            <div class="setting-desc">How to use each feature and what each indicator means</div>
+          </div>
+          <button class="btn btn-primary" onclick="showHelp()">Open Guide</button>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="card settings-card">
+        <h3 class="settings-title">&#8505; About</h3>
+        <div class="about-info">
+          <div class="about-row"><span>Project</span><span>DUON — Dynamic Ultrasonic Operations Navigation</span></div>
+          <div class="about-row"><span>Course</span><span>Mechanical Automation &amp; Robotics</span></div>
+          <div class="about-row"><span>Team</span><span>Shon Parale &amp; Vedant Patel</span></div>
+          <div class="about-row"><span>Server</span><span>FastAPI + Uvicorn + WebSockets</span></div>
+          <div class="about-row"><span>Tunnel Ready</span><span>Cloudflare compatible (wss:// auto-detect)</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ PAGE: MAPPING ══ -->
+  <section class="page" id="page-mapping">
+    <div class="page-header">
+      <h1>Mapping</h1>
+      <p class="page-sub">Draw room maps, add obstacles, live sonar heat-mapping &amp; autonomous exploration</p>
+    </div>
+
+    <!-- Map Manager Bar -->
+    <div class="card adv-map-bar">
+      <div class="adv-map-bar-inner">
+        <select id="adv-map-select" class="field-select adv-map-select">
+          <option value="">-- Select Map --</option>
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="advRefreshList()">&#8635;</button>
+        <button class="btn btn-outline btn-sm" onclick="advMapLoad()">&#128196; Load</button>
+        <button class="btn btn-primary btn-sm" onclick="advMapNew()">&#43; New</button>
+        <button class="btn btn-outline btn-sm" onclick="advMapSave()">&#128190; Save</button>
+        <button class="btn btn-outline btn-sm" onclick="advMapClose()">&#215; Close</button>
+        <button class="btn btn-danger-soft btn-sm" onclick="advMapDelete()">&#128465; Delete</button>
+      </div>
+      <!-- Inline new-map input (shown when + New is clicked) -->
+      <div id="adv-newmap-inp" style="display:none;align-items:center;gap:8px;width:100%;margin-top:8px;flex-wrap:wrap;">
+        <input id="adv-newmap-name" class="adv-field" type="text" placeholder="Map name&hellip;"
+          style="flex:1;min-width:140px;"
+          onkeydown="if(event.key==='Enter')advMapNewConfirm();if(event.key==='Escape'){this.closest('#adv-newmap-inp').style.display='none';}" />
+        <button class="btn btn-success btn-sm" onclick="advMapNewConfirm()">&#10003; Create</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('adv-newmap-inp').style.display='none'">&#215;</button>
+      </div>
+      <div class="adv-active-lbl" id="adv-active-lbl">No map loaded</div>
+    </div>
+
+    <!-- Two-panel layout -->
+    <div class="adv-layout mt16">
+
+      <!-- Left: Controls -->
+      <div class="adv-ctrl-col">
+
+        <!-- Room Dimensions -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">&#127968; Room Dimensions</span></div>
+          <div class="adv-dims-grid">
+            <div class="field-row">
+              <label class="field-label">Width (cm)</label>
+              <input class="adv-field" id="adv-room-w" type="number" value="400" min="50" max="5000" />
+            </div>
+            <div class="field-row">
+              <label class="field-label">Height (cm)</label>
+              <input class="adv-field" id="adv-room-h" type="number" value="400" min="50" max="5000" />
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="advSetRoom()">&#10003; Apply Room Size</button>
+        </div>
+
+        <!-- Obstacles -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">&#9646; Obstacles</span>
+            <span class="card-sub">Drag canvas or enter coords</span>
+          </div>
+          <div class="adv-obs-form">
+            <input class="adv-field" id="adv-obs-name" type="text" placeholder="Obstacle name" />
+            <div class="adv-coord-grid">
+              <input class="adv-field" id="adv-obs-x1" type="number" placeholder="X1 (cm)" />
+              <input class="adv-field" id="adv-obs-y1" type="number" placeholder="Y1 (cm)" />
+              <input class="adv-field" id="adv-obs-x2" type="number" placeholder="X2 (cm)" />
+              <input class="adv-field" id="adv-obs-y2" type="number" placeholder="Y2 (cm)" />
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary btn-sm" id="adv-obs-add-btn" onclick="advAddObs()">+ Add Obstacle</button>
+              <button class="btn btn-ghost btn-sm" onclick="advCancelEdit()">&#215; Cancel</button>
+            </div>
+          </div>
+          <div class="adv-obs-list" id="adv-obs-list"></div>
+        </div>
+
+        <!-- Live Sonar -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">&#128225; Live Sonar Heat Map</span></div>
+          <p class="adv-info-text">Drive the bot from the Drive page — sonar detections are auto-plotted here as amber dots.</p>
+          <div class="adv-sonar-vals" id="adv-sonar-vals">L: --- cm &nbsp;|&nbsp; F: --- cm &nbsp;|&nbsp; R: --- cm</div>
+          <button class="btn btn-outline btn-sm mt8" onclick="advHeatClear()">&#128465; Clear Heat Map</button>
+        </div>
+
+        <!-- Auto Explore -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">&#129302; Autonomous Explore</span></div>
+          <p class="adv-info-text">Bot navigates on its own, avoiding obstacles and building the heat map automatically.</p>
+          <button class="btn btn-primary" id="adv-explore-btn" onclick="advToggleExplore()">&#9654; Start Exploring</button>
+        </div>
+
+        <!-- Bot Pose -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">&#128204; Bot Pose (Estimated)</span></div>
+          <div class="pose-strip">
+            <div class="pose-box"><span class="pose-lbl">X</span><span class="pose-val" id="adv-pose-x">0</span><span class="pose-unit">cm</span></div>
+            <div class="pose-box"><span class="pose-lbl">Y</span><span class="pose-val" id="adv-pose-y">0</span><span class="pose-unit">cm</span></div>
+            <div class="pose-box"><span class="pose-lbl">HDG</span><span class="pose-val" id="adv-pose-h">0&deg;</span></div>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">&#128204; Set Bot Position</span><span class="card-sub">Tell system where bot starts</span></div>
+          <div class="adv-nav-row">
+            <input class="adv-field" id="adv-botpos-x" type="number" placeholder="X (cm)" />
+            <input class="adv-field" id="adv-botpos-y" type="number" placeholder="Y (cm)" />
+            <input class="adv-field" id="adv-botpos-h" type="number" placeholder="Heading °" min="0" max="359" />
+          </div>
+          <div class="btn-row mt8">
+            <button class="btn btn-outline btn-sm" id="adv-setpos-btn" onclick="advSetCanvasMode('set_pos')">&#9654; Click on Map</button>
+            <button class="btn btn-primary btn-sm" onclick="advApplyBotPos()">&#10003; Apply</button>
+          </div>
+        </div>
+
+        <!-- A to B Navigation -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">&#128204; A &#8594; B Navigation</span><span class="card-sub">Shortest path, avoids obstacles</span></div>
+          <div class="adv-nav-row">
+            <input class="adv-field" id="adv-nav-tx" type="number" placeholder="Target X (cm)" />
+            <input class="adv-field" id="adv-nav-ty" type="number" placeholder="Target Y (cm)" />
+          </div>
+          <div class="btn-row mt8">
+            <button class="btn btn-outline btn-sm" id="adv-settgt-btn" onclick="advSetCanvasMode('set_target')">&#9654; Click on Map</button>
+            <button class="btn btn-success btn-sm" id="adv-nav-btn" onclick="advNavTo()">&#9654; Navigate</button>
+            <button class="btn btn-danger btn-sm" onclick="advNavStop()">&#9632; Stop</button>
+          </div>
+          <div class="adv-nav-status" id="adv-nav-status">Status: Idle</div>
+        </div>
+
+        <!-- Legend -->
+        <div class="card">
+          <div class="card-header"><span class="card-title">&#127968; Legend</span></div>
+          <div class="adv-legend">
+            <span class="leg-item"><span class="leg-dot" style="background:#ef4444"></span>Obstacle</span>
+            <span class="leg-item"><span class="leg-dot" style="background:#fbbf24"></span>Sonar Hit</span>
+            <span class="leg-item"><span class="leg-dot" style="background:#f1c40f"></span>Bot</span>
+            <span class="leg-item"><span class="leg-dot" style="background:#0ea5e9;border-radius:0"></span>Room</span>
+          </div>
+        </div>
+
+      </div><!-- /adv-ctrl-col -->
+
+      <!-- Right: Canvas -->
+      <div class="card adv-canvas-card">
+        <div class="adv-canvas-hint">
+          <span id="adv-canvas-mode-lbl">Mode: Draw Obstacle &nbsp;|&nbsp; Scroll=Zoom &nbsp;|&nbsp; Ctrl+Drag=Pan &nbsp;|&nbsp; Dbl-click=Reset</span>
+          <div class="adv-canvas-actions">
+            <button class="btn btn-ghost btn-sm adv-mode-btn" id="adv-mode-draw" onclick="advSetCanvasMode('draw')" title="Draw obstacles by dragging">&#9634; Draw</button>
+            <button class="btn btn-ghost btn-sm adv-mode-btn" id="adv-mode-setpos" onclick="advSetCanvasMode('set_pos')" title="Click to set bot starting position">&#9711; Set Pos</button>
+            <button class="btn btn-ghost btn-sm adv-mode-btn" id="adv-mode-settgt" onclick="advSetCanvasMode('set_target')" title="Click to set navigation target">&#9654; Set Target</button>
+            <button class="btn btn-ghost btn-sm" onclick="advPanX=0;advPanY=0;advCmPx=1.2;advDraw()">&#8635; Reset</button>
+          </div>
+        </div>
+        <div id="adv-canvas-wrap">
+          <canvas id="advCanvas"></canvas>
+        </div>
+      </div>
+
+    </div><!-- /adv-layout -->
+  </section>
+
+</main><!-- /main-content -->
+
+<!-- ════════════ MOBILE BOTTOM NAV ════════════ -->
+<nav class="mobile-nav">
+  <a class="mob-nav-item" data-page="home"     onclick="navigate('home',this)"><span>&#127968;</span><span>Home</span></a>
+  <a class="mob-nav-item" data-page="network"  onclick="navigate('network',this)"><span>&#128268;</span><span>Network</span></a>
+  <a class="mob-nav-item" data-page="drive"    onclick="navigate('drive',this)"><span>&#128377;</span><span>Drive</span></a>
+  <a class="mob-nav-item" data-page="mapper"   onclick="navigate('mapper',this)"><span>&#128506;</span><span>Mapper</span></a>
+  <a class="mob-nav-item" data-page="mapping"  onclick="navigate('mapping',this)"><span>&#128209;</span><span>Mapping</span></a>
+  <a class="mob-nav-item" data-page="settings" onclick="navigate('settings',this)"><span>&#9881;</span><span>Settings</span></a>
+</nav>
+
+<!-- ════════════ E-STOP MODAL ════════════ -->
+<div class="modal-backdrop" id="estop-backdrop">
+  <div class="modal estop-modal">
+    <div class="modal-icon">&#128680;</div>
+    <h2>EMERGENCY STOP</h2>
+    <p id="estop-reason">Obstacle detected!</p>
+    <p class="modal-note">Robot has been automatically stopped.</p>
+    <button class="btn btn-warning" onclick="overrideEStop()">Override — 3s Reverse Window</button>
+  </div>
+</div>
+
+<!-- ════════════ HELP MODAL ════════════ -->
+<div class="modal-backdrop" id="help-backdrop" onclick="closeHelp(event)">
+  <div class="modal help-modal">
+    <div class="modal-header">
+      <h2>&#128218; User Guide</h2>
+      <button class="modal-close" onclick="closeHelp()">&#215;</button>
+    </div>
+    <div class="help-body">
+      <div class="help-section">
+        <h4>&#128268; Network Page</h4>
+        <ul>
+          <li><b>IP Address:</b> Enter the IP shown in Arduino Serial Monitor when ESP32 boots on Wi-Fi.</li>
+          <li><b>Connect / Disconnect:</b> Click to open or close a TCP socket to each ESP on port 8080.</li>
+          <li><b>QR Code:</b> Scan with phone to instantly open dashboard. Updates automatically for Cloudflare tunnels.</li>
+          <li><b>Connection Quality:</b> Shows WebSocket latency (browser&#8596;server) and time since last ESP data packet.</li>
+        </ul>
+      </div>
+      <div class="help-section">
+        <h4>&#128377; Drive Page</h4>
+        <ul>
+          <li><b>D-Pad:</b> Click/tap or use <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / Arrow keys. <kbd>Space</kbd> = Stop.</li>
+          <li><b>Numpad:</b> Click buttons or use Numpad <kbd>8</kbd><kbd>4</kbd><kbd>6</kbd><kbd>2</kbd>. <kbd>5</kbd> = Stop.</li>
+          <li><b>Omni Joystick:</b> Drag the glowing knob in any direction. Release to stop. Works with touch.</li>
+          <li><b>Dual Axis:</b> Left stick = forward/backward. Right stick = left/right. Release any stick to stop.</li>
+          <li><b>Auto E-Stop:</b> Automatically stops robot when any sonar reads &#8804; 10 cm.</li>
+        </ul>
+      </div>
+      <div class="help-section">
+        <h4>&#128506; Mapper Page</h4>
+        <ul>
+          <li><b>Start Mapping:</b> Robot begins autonomous navigation. It avoids walls and maps free space.</li>
+          <li><b>Pulse mode:</b> Robot stops, reads sonar, then moves. More accurate mapping.</li>
+          <li><b>Smooth mode:</b> Robot moves continuously, reacting to obstacles in real time.</li>
+          <li><b>Map colors:</b> Red = Wall &nbsp; Cyan = Path &nbsp; Green = Free space &nbsp; Yellow diamond = Bot.</li>
+          <li><b>Canvas controls:</b> Scroll to zoom, click-drag to pan, double-click to reset view.</li>
+        </ul>
+      </div>
+      <div class="help-section">
+        <h4>&#9679; Status Bar</h4>
+        <ul>
+          <li><b>ESP1/ESP2 dots:</b> Green pulsing = connected. Red = offline.</li>
+          <li><b>STOP button:</b> Instantly sends stop command to both ESPs (manual emergency stop).</li>
+          <li><b>AUTO button:</b> Arm/disarm the automatic proximity-based emergency stop.</li>
+          <li><b>F: xx cm:</b> Live front sonar distance (updates in real-time when ESP1 connected).</li>
+          <li><b>MAP: ON/OFF:</b> Shows whether auto-mapping is currently running.</li>
+          <li><b>LIVE indicator:</b> Green = WebSocket connected. Flashes with latency in ms.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/qrcode.min.js?v=20260429"></script>
+<script src="/static/js/main.js?v=20260429"></script>
+<script src="/static/js/mapping.js?v=20260429"></script>
+</body>
+</html>
